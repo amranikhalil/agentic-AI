@@ -13,3 +13,18 @@ export interface LLMProvider {
   chat(messages: ChatMessage[], options?: ChatOptions): Promise<string>;
   chatStream(messages: ChatMessage[], options?: ChatOptions): AsyncGenerator<string>;
 }
+export interface searchResult {
+  title : string;
+  snippet: string;
+  url : string
+}
+export  interface SearchResonse {
+  queries: string[];
+  results : searchResult[]
+}
+
+export interface AgentMessage {
+  agent: 'search' | 'researcher' | 'writer';
+  state: 'thinking' | 'completed';
+  message: string;
+}

@@ -19,6 +19,7 @@ export function createOllamaProvider(): LLMProvider {
           temperature: options?.temperature ?? 0.7,
           num_predict: options?.maxTokens,
         },
+        think: false,
       });
       return response.message.content;
     },
@@ -32,10 +33,13 @@ export function createOllamaProvider(): LLMProvider {
           num_predict: options?.maxTokens,
         },
         stream: true,
+        think: false,
       });
 
       for await (const chunk of stream) {
-        yield chunk.message.content;
+        if (chunk.message.content) {
+          yield chunk.message.content;
+        }
       }
     },
   };

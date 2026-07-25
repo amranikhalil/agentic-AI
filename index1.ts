@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { getProvider } from './src/providers/index.js';
+import type { searchResult } from './src/providers/types.js';
 
 const app = express();
 app.use(cors());
@@ -127,7 +128,7 @@ app.get('/api/stream-agents', async (req, res) => {
       return;
     }
 
-    const allResults: any[] = [];
+    const allResults: searchResult[] = [];
     try {
       for (const q of queriesArray) {
         console.log(`Searching: ${q}`);
@@ -136,7 +137,7 @@ app.get('/api/stream-agents', async (req, res) => {
           title: r.title,
           snippet: r.snippet,
           url: r.link
-        })));
+        }))) ;
         await sleep(1000);
       }
     } catch (error) {
@@ -178,14 +179,29 @@ app.get('/api/stream-agents', async (req, res) => {
       [
         {
           role: 'system',
-          content: 'You are a Senior Technical Writer. Convert research notes into a clean, well-formatted Markdown guide.'
+          content: `You are a Senior Technical Writer. Convert research notes into a professional, well-structured Markdown report.
+
+FORMAT REQUIREMENTS:
+1. Start with a clear # Title
+2. Add ## Summary (2-3 sentences)
+3. Add ## Comparison (use a markdown table if comparing options)
+4. Add ## Pros and Cons (bullet lists)
+5. Add ## Recommendations (actionable advice)
+6. Add ## Sources (numbered list with clickable links)
+
+SOURCE FORMAT:
+For each source provided, format as:
+1. [Title](URL) - brief description
+
+Use proper markdown syntax: headers (#), tables (|), bullet lists (-), bold (**text**), code blocks (\`\`\`).
+Be concise but comprehensive. Target technical audience.`
         },
         {
           role: 'user',
-          content: `User Request: "${prompt}"\n\nResearcher Notes:\n${researchNotes}`
+          content: `User Request: "${prompt}"\n\nResearcher Notes:\n${researchNotes}\n\nSources:\n${searchContext}`
         }
       ],
-      { temperature: 0.7, maxTokens: 600 }
+      { temperature: 0.7, maxTokens: 800 }
     )) {
       sendEvent('agent2-token', { chunk: token });
     }
