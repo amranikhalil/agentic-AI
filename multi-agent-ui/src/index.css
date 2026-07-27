@@ -1,111 +1,110 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+/* ---------------------------------------------------------------------------
+   WebTUI theme overrides — Catppuccin Mocha
+   Hairline borders, character-cell sizing, single accent.
+--------------------------------------------------------------------------- */
+:root,
+[data-webtui-theme="dark"] {
+  /* Catppuccin Mocha */
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181826;
+  --ctp-crust: #11111b;
+  --ctp-surface0: #313244;
+  --ctp-surface1: #45475a;
+  --ctp-surface2: #585b70;
+  --ctp-overlay0: #6c7086;
+  --ctp-overlay1: #7f849c;
+  --ctp-overlay2: #9399b2;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext0: #a6adc8;
+  --ctp-subtext1: #bac2de;
+  --ctp-green: #a6e3a1;
+  --ctp-blue: #89b4fa;
+  --ctp-red: #f38ba8;
+  --ctp-yellow: #f9e2af;
+  --ctp-mauve: #cba6f7;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Single accent — reserved for "currently active" state only */
+  --accent: var(--ctp-green);
+  --accent-dim: rgba(166, 227, 161, 0.35);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  /* Map onto WebTUI's CSS variables */
+  --background0: var(--ctp-crust);
+  --background1: var(--ctp-base);
+  --background2: var(--ctp-surface0);
+  --background3: var(--ctp-surface1);
+  --foreground0: var(--ctp-text);
+  --foreground1: var(--ctp-subtext1);
+  --foreground2: var(--ctp-overlay1);
+  --font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --font-size: 14px;
+  --line-height: 1.5;
+  --box-border-width: 1px;
+  --box-border-color: var(--ctp-surface1);
+  --box-rounded-radius: 0;
+
+  color-scheme: dark;
+  background: var(--ctp-base);
+  color: var(--ctp-text);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--ctp-base);
+  color: var(--ctp-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--line-height);
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  height: 100svh;
+  margin: 0;
+  text-align: left;
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
+* {
+  box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* No border-radius anywhere */
+* {
+  border-radius: 0 !important;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+::selection {
+  background: var(--accent-dim);
+  color: var(--ctp-base);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* Scrollbars — thin, terminal-style */
+*::-webkit-scrollbar {
+  width: 1ch;
+  height: 1ch;
+}
+*::-webkit-scrollbar-track {
+  background: var(--ctp-base);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--ctp-surface1);
+  border: 1px solid var(--ctp-surface0);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--ctp-surface2);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+a {
+  color: var(--ctp-blue);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }

@@ -162,7 +162,7 @@ app.get('/api/stream-agents', async (req, res) => {
       [
         {
           role: 'system',
-          content: 'You are an Expert Technical Researcher. be extremly concise. Deconstruct the user query and provide concise, high-level technical point notes.'
+          content: 'You are an Expert Technical Researcher. be  concise. Deconstruct the user query and provide concise, high-level technical point notes.'
         },
         { role: 'user', content: `User Request: "${prompt}"\n\nSearch Results:\n${searchContext}` }
       ],
@@ -180,54 +180,8 @@ app.get('/api/stream-agents', async (req, res) => {
       [
         {
           role: 'system',
-          content: `You are a Senior Technical Writer. You MUST output your report in this EXACT structure. Do not deviate. Do not add extra sections.
+          content: `You are a Senior wrtiter. Your task is to take the research notes and search results provided by the Researcher Agent and create a clear, professional, and well-structured final report in Markdown format in easy language for the user to understand.`
 
-# [Topic Title]
-
-## Summary
-[2-3 sentences summarizing the key findings]
-
-## Comparison
-
-| Feature | Option A | Option B |
-|---------|----------|----------|
-| Performance | ... | ... |
-| Ease of Use | ... | ... |
-| Ecosystem | ... | ... |
-
-## Pros and Cons
-
-### Option A
-**Pros:**
-- Point 1
-- Point 2
-
-**Cons:**
-- Point 1
-- Point 2
-
-### Option B
-**Pros:**
-- Point 1
-- Point 2
-
-**Cons:**
-- Point 1
-- Point 2
-
-## Recommendation
-[Clear, actionable recommendation based on the research]
-
-## Sources
-1. [Source Title](URL) - Brief description
-2. [Source Title](URL) - Brief description
-
-RULES:
-- Use the EXACT headings above
-- Always include a comparison table when comparing options
-- Keep bullet points short (1 line each)
-- Include ALL sources provided
-- Do NOT wrap output in code blocks`
         },
         {
           role: 'user',
