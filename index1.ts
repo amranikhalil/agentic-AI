@@ -69,6 +69,7 @@ app.get('/api/search', async (req, res) => {
         url: r.link
       }));
       allResults = allResults.concat(formatted);
+      allResults= Array.from(new Map(allResults.map(r=>[r.url,r])).values())
       await sleep(1000);
     }
   } catch (error) {
@@ -179,29 +180,61 @@ app.get('/api/stream-agents', async (req, res) => {
       [
         {
           role: 'system',
-          content: `You are a Senior Technical Writer. Convert research notes into a professional, well-structured Markdown report.
+          content: `You are a Senior Technical Writer. You MUST output your report in this EXACT structure. Do not deviate. Do not add extra sections.
 
-FORMAT REQUIREMENTS:
-1. Start with a clear # Title
-2. Add ## Summary (2-3 sentences)
-3. Add ## Comparison (use a markdown table if comparing options)
-4. Add ## Pros and Cons (bullet lists)
-5. Add ## Recommendations (actionable advice)
-6. Add ## Sources (numbered list with clickable links)
+# [Topic Title]
 
-SOURCE FORMAT:
-For each source provided, format as:
-1. [Title](URL) - brief description
+## Summary
+[2-3 sentences summarizing the key findings]
 
-Use proper markdown syntax: headers (#), tables (|), bullet lists (-), bold (**text**), code blocks (\`\`\`).
-Be concise but comprehensive. Target technical audience.`
+## Comparison
+
+| Feature | Option A | Option B |
+|---------|----------|----------|
+| Performance | ... | ... |
+| Ease of Use | ... | ... |
+| Ecosystem | ... | ... |
+
+## Pros and Cons
+
+### Option A
+**Pros:**
+- Point 1
+- Point 2
+
+**Cons:**
+- Point 1
+- Point 2
+
+### Option B
+**Pros:**
+- Point 1
+- Point 2
+
+**Cons:**
+- Point 1
+- Point 2
+
+## Recommendation
+[Clear, actionable recommendation based on the research]
+
+## Sources
+1. [Source Title](URL) - Brief description
+2. [Source Title](URL) - Brief description
+
+RULES:
+- Use the EXACT headings above
+- Always include a comparison table when comparing options
+- Keep bullet points short (1 line each)
+- Include ALL sources provided
+- Do NOT wrap output in code blocks`
         },
         {
           role: 'user',
           content: `User Request: "${prompt}"\n\nResearcher Notes:\n${researchNotes}\n\nSources:\n${searchContext}`
         }
       ],
-      { temperature: 0.7, maxTokens: 800 }
+      { temperature: 0.5, maxTokens: 1200 }
     )) {
       sendEvent('agent2-token', { chunk: token });
     }

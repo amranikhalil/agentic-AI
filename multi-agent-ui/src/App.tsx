@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface SearchResult {
   title: string;
@@ -98,10 +99,12 @@ export default function App() {
     fontSize: '0.95rem',
     lineHeight: 1.8,
     color: '#e0e0e0',
+    textAlign: 'left' as const, // 👈 FIX 1: Forces left alignment
+    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', // 👈 FIX 2: Modern readable typography
   };
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '1.5rem', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', background: '#121212', color: '#e0e0e0', minHeight: '100vh' }}>
+    <div style={{ maxWidth: '1400px', padding: '1.5rem', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif', background: '#121212', color: '#e0e0e0', minHeight: '100vh' }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
         <h1 style={{ marginBottom: '0.5rem', fontSize: '1.75rem', fontWeight: 600 }}>Tech Research Agent</h1>
@@ -172,6 +175,7 @@ export default function App() {
         <div style={{ ...markdownStyle, maxHeight: '600px' }}>
           {agent2Output ? (
               <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
                 components={{
                   table: ({ children }) => (
                     <div style={{ overflowX: 'auto', marginBottom: '1.25rem' }}>
