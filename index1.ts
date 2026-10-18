@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { getProvider } from './src/providers/index.js';
 import type { searchResult } from './src/providers/types.js';
+import { searchWiki } from './src/retrieval/wiki.js';
 
 const app = express();
 app.use(cors());
@@ -104,6 +105,15 @@ app.get('/api/stream-agents', async (req, res) => {
     // 3. Send 'search-results' event with { queries, results }
     // 4. Pass search results to Researcher as context
     // ------------------------------------------------------------------
+
+    // Wiki retrieval needs only the user's prompt, so start it now and let it run while
+    // the query agent and web search work. If the RAG service is down, keep going with
+    // web results only rather than failing the whole pipeline.
+    const wikiPromise = searchWiki(prompt).catch((error) => {
+      console.warn('⚠️ Wiki retrieval unavailable, continuing with web results only:', error.message);
+      return [] as searchResult[];
+    });
+
     let queryContent = '';
     for await (const token of llm.chatStream(
       [
@@ -137,7 +147,8 @@ app.get('/api/stream-agents', async (req, res) => {
         allResults.push(...results.slice(0, 5).map((r: any) => ({
           title: r.title,
           snippet: r.snippet,
-          url: r.link
+          url: r.link,
+          source: 'web' as const
         }))) ;
         await sleep(1000);
       }
@@ -148,8 +159,11 @@ app.get('/api/stream-agents', async (req, res) => {
       return;
     }
 
+    // Wiki first: it's the curated source, so it gets the lowest [n] numbers.
+    allResults.unshift(...await wikiPromise);
+
     const searchContext = allResults.map((r, i) =>
-      `[${i + 1}] ${r.title}\n${r.snippet}\nURL: ${r.url}`
+      `[${i + 1}] (${r.source === 'wiki' ? 'Monster wiki' : 'web'}) ${r.title}\n${r.snippet}\nURL: ${r.url}`
     ).join('\n\n');
 
     sendEvent('search-results', { queries: queriesArray, results: allResults });

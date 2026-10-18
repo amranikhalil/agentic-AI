@@ -12,7 +12,7 @@ export function createGrokProvider(): LLMProvider {
 
   const model = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
   return {
-    name: 'llama',
+    name: 'Groq',
 
     async chat(messages: ChatMessage[], options?: ChatOptions): Promise<string> {
       const response = await client.chat.completions.create({

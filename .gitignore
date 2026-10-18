@@ -1,2 +1,8 @@
 .env
 node_modules
+
+# Python RAG service (rag/): environment and rebuildable data
+rag/.venv/
+rag/corpus/
+rag/index/
+__pycache__/

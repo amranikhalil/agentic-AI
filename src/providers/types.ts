@@ -17,6 +17,7 @@ export interface searchResult {
   title : string;
   snippet: string;
   url : string
+  source?: 'web' | 'wiki'
 }
 export  interface SearchResonse {
   queries: string[];
@@ -28,3 +29,9 @@ export interface AgentMessage {
   state: 'thinking' | 'completed';
   message: string;
 }
+export  interface switchinfo {
+  from : string,
+  to:string,
+  reason:string 
+}
+export type switchCallBack=(info:switchinfo)=>void
